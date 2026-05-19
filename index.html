@@ -1,0 +1,2581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The GA4 Game — Cru Analytics Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0F0F10;
+    --ink-soft: #4A4E55;
+    --ink-mute: #8C9097;
+    --paper: #FFFFFF;
+    --canvas: #E8EEF1;
+    --rule: #D5DCE0;
+    --rule-soft: #EDF1F3;
+    --yellow: #FFCC00;
+    --yellow-soft: #FFF1B8;
+    --yellow-deep: #B27B16;
+    --cyan: #00B6D6;
+    --cyan-soft: #CDF0F7;
+    --teal: #00748F;
+    --teal-soft: #C9DEE5;
+    --coral: #E8593C;
+    --coral-soft: #FBDDD2;
+    --mint: #2BA46E;
+    --mint-soft: #CDEDD9;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'cv02','cv03','cv04','cv11';
+  }
+
+  /* ===== TOP NAV (Cru-styled) ===== */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    backdrop-filter: blur(12px);
+  }
+  .topnav-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .brand-logo {
+    height: 38px;
+    width: auto;
+    display: block;
+  }
+  .foot-logo-wrap {
+    background: #FFFFFF;
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+  }
+  .foot-logo {
+    height: 42px;
+    width: auto;
+    display: block;
+  }
+  .brand-divider { height: 22px; width: 1px; background: var(--rule); }
+  .brand-product { font-size: 14px; font-weight: 600; color: var(--ink-soft); letter-spacing: -0.1px; }
+
+  .nav-links {
+    display: flex;
+    gap: 26px;
+    margin-left: auto;
+    margin-right: 8px;
+  }
+  .nav-links a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color .15s ease;
+  }
+  .nav-links a:hover { border-bottom-color: var(--yellow); }
+  .score-pill {
+    background: var(--yellow);
+    color: var(--ink);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    border: none;
+    cursor: pointer;
+    transition: transform .15s ease;
+  }
+  .score-pill:hover { transform: translateY(-1px); }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: var(--canvas);
+    padding: 100px 28px 120px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 2; }
+  .hero-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 2.4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 24px;
+  }
+  .hero h1 {
+    font-size: clamp(42px, 7.5vw, 92px);
+    line-height: 0.98;
+    letter-spacing: -2.5px;
+    font-weight: 900;
+    margin: 0 0 24px;
+    color: var(--ink);
+  }
+  .hero .lede {
+    font-size: clamp(17px, 1.7vw, 21px);
+    color: var(--ink-soft);
+    max-width: 640px;
+    margin: 0 auto 36px;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--yellow);
+    color: var(--ink);
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+    font-family: inherit;
+  }
+  .cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255,204,0,.4);
+  }
+  .cta .arrow {
+    display: inline-block;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--yellow);
+    font-size: 11px;
+    text-align: center;
+    line-height: 22px;
+    font-weight: 900;
+  }
+
+  /* progress ribbon */
+  .progress-ribbon {
+    background: var(--ink);
+    color: white;
+    padding: 16px 28px;
+  }
+  .progress-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .progress-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--yellow);
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,.12);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--yellow);
+    border-radius: 999px;
+    transition: width .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .progress-score {
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    min-width: 90px;
+    text-align: right;
+  }
+
+  /* ===== GLOBAL SECTION ===== */
+  section.lvl {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 96px 28px 64px;
+    scroll-margin-top: 70px;
+  }
+  .lvl-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 20px;
+  }
+  .lvl-eyebrow .num {
+    background: var(--ink);
+    color: var(--yellow);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0;
+  }
+  .lvl-eyebrow.cyan .num { background: var(--cyan); color: var(--ink); }
+  .lvl-eyebrow.yellow .num { background: var(--yellow); color: var(--ink); }
+  .lvl-eyebrow.coral .num { background: var(--coral); color: white; }
+  .lvl-eyebrow.teal .num { background: var(--teal); color: white; }
+
+  .lvl-title {
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    line-height: 1.05;
+    margin: 0 0 18px;
+    color: var(--ink);
+    max-width: 840px;
+  }
+  .lvl-sub {
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 720px;
+    margin: 0 0 40px;
+  }
+
+  /* ===== LEVEL 1: TERM CARDS ===== */
+  .terms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 56px;
+  }
+  .term-card {
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: 14px;
+    padding: 22px 22px 24px;
+    position: relative;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .term-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+  .term-card .game-name {
+    font-size: 11px;
+    letter-spacing: 1.8px;
+    font-weight: 800;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin: 0 0 6px;
+  }
+  .term-card .ga4-name {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    margin: 0 0 14px;
+    color: var(--ink);
+  }
+  .term-card .accent {
+    width: 32px; height: 4px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+  }
+  .term-card.c-ink .accent { background: var(--ink); }
+  .term-card.c-cyan .accent { background: var(--cyan); }
+  .term-card.c-yellow .accent { background: var(--yellow); }
+  .term-card.c-coral .accent { background: var(--coral); }
+  .term-card.c-teal .accent { background: var(--teal); }
+  .term-card .desc {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* ===== INTERACTIVE: TERM MATCHER ===== */
+  .interact {
+    background: var(--canvas);
+    border-radius: 18px;
+    padding: 36px 36px 40px;
+    margin: 12px 0 0;
+  }
+  .interact-eyebrow {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--coral);
+    margin: 0 0 8px;
+  }
+  .interact h3 {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  .interact p.intro {
+    margin: 0 0 24px;
+    color: var(--ink-soft);
+    font-size: 15px;
+  }
+
+  .matcher {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .matcher .col-label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  .match-list { display: flex; flex-direction: column; gap: 10px; }
+  .match-item {
+    background: var(--paper);
+    border: 1.5px solid var(--rule);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .15s ease;
+    user-select: none;
+    font-size: 14px;
+  }
+  .match-item:hover { border-color: var(--ink); }
+  .match-item.selected {
+    border-color: var(--yellow);
+    background: var(--yellow-soft);
+    box-shadow: 0 0 0 3px var(--yellow);
+  }
+  .match-item.matched-correct {
+    background: var(--mint-soft);
+    border-color: var(--mint);
+    color: var(--ink);
+    cursor: default;
+    opacity: 0.85;
+  }
+  .match-item.matched-correct::after {
+    content: " ✓";
+    color: var(--mint);
+    font-weight: 900;
+  }
+  .match-item.shake { animation: shake .35s; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  .match-status {
+    margin-top: 18px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: var(--paper);
+    border: 1px dashed var(--rule);
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .match-status.win {
+    background: var(--mint-soft);
+    border-color: var(--mint);
+    border-style: solid;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ===== LEVEL 2: STRATEGY LOOP ===== */
+  .loop {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    margin-bottom: 56px;
+  }
+  .loop-card {
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: 14px;
+    padding: 24px 22px 22px;
+    position: relative;
+  }
+  .loop-card .step-num {
+    position: absolute;
+    top: -14px;
+    left: 22px;
+    background: var(--ink);
+    color: var(--yellow);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-weight: 900;
+    font-size: 14px;
+  }
+  .loop-card h4 {
+    margin: 8px 0 8px;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+  }
+  .loop-card .what {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0 0 12px;
+  }
+  .loop-card .ex {
+    background: var(--canvas);
+    border-left: 3px solid var(--yellow);
+    padding: 10px 12px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .loop-card .ex .label {
+    display: block;
+    font-size: 9.5px;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+    color: var(--coral);
+    margin-bottom: 3px;
+  }
+
+  /* ===== LEVEL 3: FIELD GUIDE ===== */
+  .guide {
+    border: 1.5px solid var(--ink);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--paper);
+  }
+  .guide-row { border-top: 1px solid var(--rule); }
+  .guide-row:first-child { border-top: none; }
+  .guide-toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 18px;
+    padding: 22px 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+    transition: background .15s ease;
+  }
+  .guide-toggle:hover { background: var(--canvas); }
+  .guide-letter {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    background: var(--yellow);
+    color: var(--ink);
+    border-radius: 8px;
+    display: grid; place-items: center;
+    font-weight: 900;
+    font-size: 15px;
+  }
+  .guide-row:nth-child(2) .guide-letter { background: var(--cyan); color: var(--ink); }
+  .guide-row:nth-child(3) .guide-letter { background: var(--coral); color: white; }
+  .guide-row:nth-child(4) .guide-letter { background: var(--ink); color: var(--yellow); }
+  .guide-row:nth-child(5) .guide-letter { background: var(--teal); color: white; }
+  .guide-row:nth-child(6) .guide-letter { background: var(--yellow-deep); color: white; }
+
+  .guide-q { flex: 1; font-weight: 800; font-size: 16px; letter-spacing: -0.2px; }
+  .guide-q .arrow-to { color: var(--ink-soft); margin: 0 8px; font-weight: 400; }
+  .guide-chev {
+    color: var(--ink-soft);
+    font-size: 15px;
+    transition: transform .25s ease;
+  }
+  .guide-toggle[aria-expanded="true"] .guide-chev { transform: rotate(90deg); }
+  .guide-body {
+    display: none;
+    padding: 0 28px 28px 82px;
+  }
+  .guide-toggle[aria-expanded="true"] + .guide-body { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
+  @media (max-width: 880px) {
+    .guide-toggle[aria-expanded="true"] + .guide-body { grid-template-columns: 1fr; padding-left: 28px; }
+  }
+  .clicktrail { margin: 0; padding: 0; list-style: none; counter-reset: step; }
+  .clicktrail li {
+    counter-increment: step;
+    padding: 8px 0 8px 36px;
+    position: relative;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .clicktrail li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0; top: 7px;
+    width: 22px; height: 22px;
+    background: var(--ink); color: var(--yellow);
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 900;
+    display: grid; place-items: center;
+  }
+  .story-out {
+    background: var(--yellow-soft);
+    border-radius: 10px;
+    padding: 14px 16px;
+    align-self: start;
+  }
+  .story-out .lbl {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1.6px;
+    font-weight: 800;
+    color: var(--coral);
+    margin-bottom: 6px;
+  }
+  .story-out p { margin: 0; font-size: 13.5px; line-height: 1.55; }
+  .kbd {
+    display: inline-block;
+    padding: 1px 7px;
+    background: var(--ink);
+    color: var(--yellow);
+    border-radius: 4px;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* ===== LEVEL 4: STORY CARDS ===== */
+  .stories {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .story-card {
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: 14px;
+    padding: 22px 22px 22px;
+    position: relative;
+    transition: transform .15s ease;
+  }
+  .story-card:hover { transform: translateY(-2px); }
+  .story-card .chip {
+    display: inline-block;
+    font-size: 10.5px;
+    letter-spacing: 1.6px;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .chip-win { background: var(--mint-soft); color: #1a7245; }
+  .chip-watch { background: var(--coral-soft); color: var(--coral); }
+  .chip-mixed { background: var(--yellow-soft); color: var(--yellow-deep); }
+  .story-card h4 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: -0.4px;
+  }
+  .story-card .headline {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin: 0 0 14px;
+  }
+  .story-card .behavior {
+    background: var(--canvas);
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    margin: 0 0 12px;
+    line-height: 1.5;
+  }
+  .story-card .move {
+    font-size: 12.5px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--rule);
+    color: var(--ink);
+  }
+  .story-card .move strong { color: var(--coral); }
+
+  /* ===== LEVEL 5: PUZZLES ===== */
+  .quest {
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    border-radius: 14px;
+    margin-top: 16px;
+    overflow: hidden;
+    transition: border-color .25s ease;
+  }
+  .quest.solved { border-color: var(--mint); }
+  .quest-head {
+    padding: 22px 24px 16px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .quest-num {
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: grid; place-items: center;
+    font-weight: 900;
+    font-size: 17px;
+    background: var(--yellow);
+    color: var(--ink);
+    transition: all .25s ease;
+  }
+  .quest.solved .quest-num {
+    background: var(--mint);
+    color: white;
+  }
+  .quest-title {
+    margin: 4px 0 6px;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+  }
+  .quest-prompt { color: var(--ink-soft); font-size: 14px; margin: 0; line-height: 1.55; }
+  .quest-actions { padding: 0 24px 18px 80px; }
+  .reveal-btn {
+    background: var(--ink);
+    color: var(--yellow);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .2s ease;
+    letter-spacing: 0.2px;
+  }
+  .reveal-btn:hover { transform: translateY(-1px); }
+  .reveal-btn.solved-btn { background: var(--mint); color: white; }
+  .quest-answer {
+    display: none;
+    margin: 0 24px 22px 80px;
+    padding: 16px 18px;
+    background: var(--mint-soft);
+    border-left: 3px solid var(--mint);
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  .quest-answer.open { display: block; animation: slide .3s ease; }
+  @keyframes slide {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .quest-answer h5 {
+    margin: 0 0 6px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: #1a7245;
+    text-transform: uppercase;
+    font-weight: 900;
+  }
+  .quest-answer p { margin: 0 0 8px; }
+  .quest-answer .why { color: var(--ink-soft); font-size: 13.5px; }
+  @media (max-width: 600px) {
+    .quest-actions { padding-left: 24px; }
+    .quest-answer { margin-left: 24px; }
+  }
+
+  /* ===== KNOWLEDGE CHECK (FINAL QUIZ) ===== */
+  .check {
+    background: var(--ink);
+    color: white;
+    padding: 80px 28px 100px;
+    margin-top: 96px;
+  }
+  .check-inner { max-width: 880px; margin: 0 auto; }
+  .check-eyebrow {
+    color: var(--yellow);
+    font-size: 12px;
+    letter-spacing: 2.4px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0 0 16px;
+  }
+  .check h2 {
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    line-height: 1.05;
+    margin: 0 0 16px;
+  }
+  .check .lede {
+    font-size: 17px;
+    color: rgba(255,255,255,.7);
+    max-width: 600px;
+    margin: 0 0 40px;
+  }
+  .quiz-card {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 14px;
+    padding: 28px 28px 24px;
+    margin-bottom: 18px;
+  }
+  .quiz-q-num {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--yellow);
+    margin-bottom: 10px;
+  }
+  .quiz-q {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 18px;
+    line-height: 1.4;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt {
+    background: rgba(255,255,255,.04);
+    border: 1.5px solid rgba(255,255,255,.16);
+    color: white;
+    padding: 14px 18px;
+    border-radius: 10px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14.5px;
+    font-family: inherit;
+    transition: all .15s ease;
+    line-height: 1.4;
+  }
+  .quiz-opt:hover {
+    background: rgba(255,255,255,.10);
+    border-color: rgba(255,255,255,.32);
+  }
+  .quiz-opt.locked { cursor: default; }
+  .quiz-opt.correct {
+    background: rgba(43, 164, 110, .25);
+    border-color: var(--mint);
+  }
+  .quiz-opt.wrong {
+    background: rgba(232, 89, 60, .22);
+    border-color: var(--coral);
+  }
+  .quiz-feedback {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.06);
+    font-size: 13.5px;
+    color: rgba(255,255,255,.85);
+    border-left: 3px solid var(--yellow);
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback strong { color: var(--yellow); }
+
+  .result-panel {
+    margin-top: 36px;
+    background: var(--yellow);
+    color: var(--ink);
+    border-radius: 18px;
+    padding: 36px 36px 40px;
+    display: none;
+  }
+  .result-panel.show { display: block; }
+  .result-eyebrow {
+    font-size: 11px;
+    letter-spacing: 2.4px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .result-score {
+    font-size: 88px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -3px;
+    margin: 8px 0;
+  }
+  .result-score .of { font-size: 28px; opacity: 0.5; font-weight: 700; }
+  .result-tier {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+    margin: 0 0 8px;
+  }
+  .result-msg { font-size: 15px; margin: 0 0 18px; max-width: 560px; }
+  .reset-btn {
+    background: var(--ink);
+    color: var(--yellow);
+    border: none;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+  }
+
+  /* ===== GLOSSARY ===== */
+  .glossary-section {
+    background: var(--canvas);
+    padding: 80px 28px;
+  }
+  .glossary-inner { max-width: 1240px; margin: 0 auto; }
+  .glossary-inner h2 {
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin: 0 0 8px;
+  }
+  .glossary-inner p.sub { margin: 0 0 28px; color: var(--ink-soft); font-size: 15px; }
+  .gloss-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .gloss-term {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .gloss-term dt {
+    font-weight: 900;
+    font-size: 14px;
+    margin: 0 0 4px;
+    letter-spacing: -0.2px;
+  }
+  .gloss-term dd { margin: 0; font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,.65);
+    padding: 48px 28px 40px;
+    text-align: center;
+  }
+  footer .foot-mark {
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+  footer h3 { color: white; margin: 0 0 8px; font-size: 16px; font-weight: 800; }
+  footer p { margin: 0; font-size: 13px; }
+  footer .hairline {
+    width: 32px; height: 2px;
+    background: var(--yellow);
+    margin: 22px auto 14px;
+  }
+
+  /* ===== WATCH & LEARN ===== */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 22px;
+    margin-bottom: 28px;
+  }
+  .video-card {
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform .15s ease;
+  }
+  .video-card:hover { transform: translateY(-2px); }
+  .video-frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--ink);
+  }
+  .video-frame iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0;
+  }
+  .video-meta { padding: 18px 20px 20px; }
+  .video-meta .pill-tag {
+    display: inline-block;
+    font-size: 10.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 800;
+    background: var(--yellow);
+    color: var(--ink);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .video-meta h4 {
+    margin: 0 0 6px;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+  }
+  .video-meta .channel { color: var(--ink-soft); font-size: 13px; margin: 0 0 10px; font-weight: 600; }
+  .video-meta .why { font-size: 13.5px; color: var(--ink-soft); margin: 0; line-height: 1.55; }
+
+  .live-callout {
+    background: var(--ink);
+    color: white;
+    border-radius: 14px;
+    padding: 28px 32px 30px;
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+  }
+  .live-callout .live-eyebrow {
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 800;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .live-callout h3 {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0 0 8px;
+    letter-spacing: -0.4px;
+  }
+  .live-callout p { font-size: 14.5px; color: rgba(255,255,255,.72); margin: 0; max-width: 600px; line-height: 1.55; }
+  .live-callout .live-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--yellow);
+    color: var(--ink);
+    padding: 13px 22px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: transform .15s ease;
+  }
+  .live-callout .live-cta:hover { transform: translateY(-1px); }
+  @media (max-width: 720px) {
+    .live-callout { grid-template-columns: 1fr; }
+    .video-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ===== EXPLORE GA4 LAUNCHPAD ===== */
+  .explore-launchpad {
+    background: var(--ink);
+    color: white;
+    border-radius: 18px;
+    padding: 44px 48px 46px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+    box-shadow: 0 12px 40px rgba(15, 15, 16, 0.18);
+  }
+  .explore-copy .launch-eyebrow {
+    font-size: 11px;
+    letter-spacing: 2.2px;
+    font-weight: 800;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+  .explore-copy h3 {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -0.8px;
+    margin: 0 0 10px;
+    line-height: 1.1;
+  }
+  .explore-copy p {
+    font-size: 15.5px;
+    color: rgba(255,255,255,.74);
+    margin: 0;
+    max-width: 540px;
+    line-height: 1.55;
+  }
+  .launch-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--yellow);
+    color: var(--ink);
+    padding: 18px 30px;
+    border-radius: 999px;
+    border: none;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .launch-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(255, 204, 0, 0.32);
+  }
+  .launch-arrow {
+    display: inline-grid;
+    place-items: center;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--yellow);
+    font-size: 14px;
+    font-weight: 900;
+  }
+  .explore-note {
+    margin-top: 16px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+  .link-btn {
+    background: none;
+    border: none;
+    color: var(--ink);
+    font-family: inherit;
+    font-weight: 700;
+    font-size: inherit;
+    cursor: pointer;
+    border-bottom: 2px solid var(--yellow);
+    padding: 0 0 1px;
+  }
+  .link-btn:hover { color: var(--ink); border-bottom-color: var(--ink); }
+  @media (max-width: 760px) {
+    .explore-launchpad { grid-template-columns: 1fr; padding: 32px 26px 34px; }
+    .launch-cta { width: 100%; justify-content: center; }
+  }
+
+  .build-lib {
+    background: var(--canvas);
+    border-radius: 14px;
+    margin-top: 28px;
+    border: 1px solid var(--rule);
+  }
+  .build-lib > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .build-lib > summary::-webkit-details-marker { display: none; }
+  .build-eyebrow {
+    font-size: 13px;
+    letter-spacing: 0.2px;
+  }
+  .build-chev {
+    color: var(--ink-soft);
+    font-weight: 800;
+    transition: transform .2s ease;
+  }
+  .build-lib[open] .build-chev { transform: rotate(180deg); }
+  .build-body {
+    padding: 4px 24px 24px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .build-body code {
+    background: var(--ink);
+    color: var(--yellow);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .build-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 18px;
+    background: var(--paper);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+  }
+  .build-table th, .build-table td {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 13px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .build-table th {
+    background: var(--ink);
+    color: var(--yellow);
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .build-table tr:last-child td { border-bottom: none; }
+  .build-table td:first-child {
+    font-weight: 700;
+    color: var(--ink);
+    width: 36%;
+  }
+  .build-table td code {
+    background: var(--canvas);
+    color: var(--ink);
+    border: 1px solid var(--rule);
+  }
+  .build-tip {
+    font-size: 13px;
+    color: var(--ink-soft);
+    background: var(--paper);
+    padding: 12px 14px;
+    border-radius: 8px;
+    border-left: 3px solid var(--yellow);
+    margin: 0;
+  }
+
+  /* ===== WALKTHROUGH MODAL ===== */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 15, 16, 0.72);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 28px;
+  }
+  .modal-backdrop.open {
+    display: flex;
+    animation: fadeIn .25s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .modal-card {
+    background: var(--paper);
+    width: 100%;
+    max-width: 1080px;
+    max-height: 92vh;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,.4);
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 28px 18px;
+    border-bottom: 1px solid var(--rule);
+    gap: 16px;
+  }
+  .modal-step {
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 800;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin: 0 0 4px;
+  }
+  .modal-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+    color: var(--ink);
+  }
+  .modal-close {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all .15s ease;
+    flex-shrink: 0;
+    font-family: inherit;
+  }
+  .modal-close:hover { background: var(--ink); color: white; border-color: var(--ink); }
+  .modal-body {
+    padding: 28px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .slide-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  /* PRIMARY VIDEO SLOT */
+  .slide-video-wrap {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--ink);
+  }
+  .slide-video-el {
+    width: 100%; height: 100%;
+    display: block;
+    border-radius: 12px;
+    object-fit: cover;
+    background: var(--ink);
+  }
+  .slide-video-el[data-loaded="false"] { display: none; }
+  .slide-video-placeholder {
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    color: rgba(255,255,255,.9);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 28px;
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+  }
+  .slide-video-wrap[data-has-video="true"] .slide-video-placeholder { display: none; }
+  .slide-video-placeholder .play-icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--yellow);
+    color: var(--ink);
+    display: grid; place-items: center;
+    margin: 0 auto 14px;
+    font-size: 26px;
+    font-weight: 900;
+    padding-left: 5px;
+  }
+  .slide-video-placeholder .ph-label {
+    font-size: 11px;
+    letter-spacing: 1.8px;
+    font-weight: 800;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin: 0 0 6px;
+  }
+  .slide-video-placeholder .ph-text {
+    font-size: 14px;
+    color: rgba(255,255,255,.92);
+    margin: 0;
+    max-width: 420px;
+    line-height: 1.5;
+  }
+  .slide-video-placeholder code {
+    background: rgba(255,255,255,.14);
+    color: var(--yellow);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    white-space: nowrap;
+  }
+
+  /* TEXT BLOCK */
+  .slide-text h3 {
+    font-size: 15px;
+    font-weight: 800;
+    margin: 0 0 12px;
+    color: var(--ink);
+    letter-spacing: -0.2px;
+  }
+  .slide-text > p {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin: 0 0 18px;
+  }
+  .slide-points {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .slide-points li {
+    display: flex;
+    gap: 10px;
+    padding: 7px 0;
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .slide-points li::before {
+    content: "›";
+    color: var(--yellow);
+    font-weight: 900;
+    font-size: 18px;
+    flex-shrink: 0;
+    line-height: 1.2;
+  }
+
+  /* SUPPLEMENTARY SCREENSHOT STRIP */
+  .slide-screenshots {
+    display: none;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+  }
+  .slide-screenshots[data-has-shots="true"] { display: grid; }
+  .shot-label {
+    grid-column: 1 / -1;
+    margin: 0 0 4px;
+    font-size: 10.5px;
+    letter-spacing: 1.6px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .shot-thumb {
+    aspect-ratio: 16 / 10;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--canvas);
+    border: 1px solid var(--rule);
+    cursor: zoom-in;
+    transition: transform .15s ease, border-color .15s ease;
+    display: none;
+  }
+  .shot-thumb[data-loaded="true"] { display: block; }
+  .shot-thumb:hover { transform: translateY(-2px); border-color: var(--ink); }
+  .shot-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* LIGHTBOX (for clicking thumbnails to view full) */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 32px;
+    cursor: zoom-out;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+  }
+  .modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 28px;
+    border-top: 1px solid var(--rule);
+    gap: 16px;
+    background: var(--canvas);
+  }
+  .nav-btn {
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--ink); color: var(--yellow); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .nav-btn.next { background: var(--ink); color: var(--yellow); }
+  .nav-btn.next:hover:not(:disabled) { background: #2A2A2C; }
+  .dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--rule);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .dot:hover { background: var(--ink-soft); }
+  .dot.active {
+    background: var(--ink);
+    width: 22px;
+    border-radius: 999px;
+  }
+  @media (max-width: 760px) {
+    .modal-footer { flex-wrap: wrap; padding: 14px 22px; }
+    .dots { order: 3; flex-basis: 100%; justify-content: center; padding-top: 8px; }
+  }
+
+  /* helpers */
+  .row-gap { margin-top: 56px; }
+
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .hero { padding: 64px 22px 80px; }
+    section.lvl { padding: 64px 22px 40px; }
+    .interact { padding: 26px 22px; }
+    .matcher { grid-template-columns: 1fr; gap: 22px; }
+    .check { padding: 56px 22px 64px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========================================== -->
+<!-- TOP NAV                                     -->
+<!-- ========================================== -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="#top" aria-label="cru">
+      <img class="brand-logo" src="cru-logo-2025.png" alt="cru">
+    </a>
+    <span class="brand-divider"></span>
+    <span class="brand-product">The GA4 Game</span>
+    <div class="nav-links">
+      <a href="#level-1">Game Rules</a>
+      <a href="#level-2">Strategy</a>
+      <a href="#level-3">Field Guide</a>
+      <a href="#level-4">Story Mode</a>
+      <a href="#level-5">Practice</a>
+      <a href="#explore">Explore GA4</a>
+      <a href="#check">Quiz</a>
+    </div>
+    <button class="score-pill" onclick="document.getElementById('check').scrollIntoView({behavior:'smooth'})">
+      START
+    </button>
+  </div>
+</nav>
+
+<!-- ========================================== -->
+<!-- HERO                                        -->
+<!-- ========================================== -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">Cru.org · Web Strategy Training</p>
+    <h1>Hey team — let's make GA4 feel less scary.</h1>
+    <p class="lede">I put this together so we can all stop dreading the analytics meetings and start showing up curious. Five short levels, a couple of mini-games, real Cru examples. Take it at your own pace and skip whatever you already know.</p>
+    <a class="cta" href="#level-1">Start with Level 1 <span class="arrow">→</span></a>
+  </div>
+</section>
+
+<!-- progress ribbon -->
+<div class="progress-ribbon">
+  <div class="progress-inner">
+    <span class="progress-label">Insights unlocked</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-score" id="progressScore">0 / 7</span>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- LEVEL 1 — GAME RULES                        -->
+<!-- ========================================== -->
+<section class="lvl" id="level-1">
+  <p class="lvl-eyebrow"><span class="num">1</span> The Game Rules</p>
+  <h2 class="lvl-title">Five vocabulary words and you're 80% there.</h2>
+  <p class="lvl-sub">Think of Cru.org as a giant board game. Every day, thousands of people show up and start playing. Analytics is just the scoreboard — it tells you who came, what they tried, and which paths actually led somewhere meaningful.</p>
+
+  <div class="terms-grid">
+    <div class="term-card c-ink">
+      <div class="accent"></div>
+      <p class="game-name">Players</p>
+      <h3 class="ga4-name">Users</h3>
+      <p class="desc">The unique people who show up. One person on a laptop and the same person on their phone usually count as two users. Useful for understanding reach.</p>
+    </div>
+    <div class="term-card c-cyan">
+      <div class="accent"></div>
+      <p class="game-name">Visits</p>
+      <h3 class="ga4-name">Sessions</h3>
+      <p class="desc">One sitting on the site. A session ends after 30 minutes of inactivity or when the user leaves. One user can have many sessions over time.</p>
+    </div>
+    <div class="term-card c-yellow">
+      <div class="accent"></div>
+      <p class="game-name">Moves</p>
+      <h3 class="ga4-name">Events</h3>
+      <p class="desc">Anything a user does — viewing a page, clicking a button, scrolling, watching a video, submitting a form. GA4 logs everything as an event.</p>
+    </div>
+    <div class="term-card c-coral">
+      <div class="accent"></div>
+      <p class="game-name">Winning Moves</p>
+      <h3 class="ga4-name">Conversions</h3>
+      <p class="desc">The events you've decided actually matter — email sign-ups, donation clicks, "Find a Cru near me." You choose which moves count.</p>
+    </div>
+    <div class="term-card c-teal">
+      <div class="accent"></div>
+      <p class="game-name">Entry Paths</p>
+      <h3 class="ga4-name">Traffic Sources</h3>
+      <p class="desc">How people got here: Google search, social media, a typed URL, a newsletter link, a paid ad. Different doors mean different player intent.</p>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE: TERM MATCHER -->
+  <div class="interact">
+    <p class="interact-eyebrow">Try it · interactive</p>
+    <h3>Match the GA4 term to its game equivalent</h3>
+    <p class="intro">Click one term on the left, then the matching game-language card on the right. Three correct in a row and you've got it.</p>
+
+    <div class="matcher">
+      <div>
+        <p class="col-label">GA4 Term</p>
+        <div class="match-list" id="match-left">
+          <button class="match-item" data-key="users">Users</button>
+          <button class="match-item" data-key="sessions">Sessions</button>
+          <button class="match-item" data-key="events">Events</button>
+          <button class="match-item" data-key="conversions">Conversions</button>
+          <button class="match-item" data-key="traffic">Traffic Sources</button>
+        </div>
+      </div>
+      <div>
+        <p class="col-label">In game language</p>
+        <div class="match-list" id="match-right">
+          <button class="match-item" data-key="conversions">Winning moves</button>
+          <button class="match-item" data-key="users">Players</button>
+          <button class="match-item" data-key="traffic">Entry paths</button>
+          <button class="match-item" data-key="events">Moves</button>
+          <button class="match-item" data-key="sessions">Visits</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="match-status" id="match-status">Pick one term on the left, then its match on the right.</div>
+  </div>
+</section>
+
+<!-- ========================================== -->
+<!-- LEVEL 2 — STRATEGY LOOP                     -->
+<!-- ========================================== -->
+<section class="lvl" id="level-2">
+  <p class="lvl-eyebrow cyan"><span class="num">2</span> The Strategy Loop</p>
+  <h2 class="lvl-title">Four questions you'll come back to every time.</h2>
+  <p class="lvl-sub">Beginners get lost in GA4 because there are so many menus. Avoid that by always running the same loop. This is the "how to think" piece — it sits above any specific report.</p>
+
+  <div class="loop">
+    <div class="loop-card">
+      <div class="step-num">1</div>
+      <h4>What is happening?</h4>
+      <p class="what">Start at the metric. Up, down, flat compared to last month / last year? Don't try to explain anything yet — just describe it.</p>
+      <div class="ex"><span class="label">Example</span>"Email sign-ups jumped 29% after the landing page redesign."</div>
+    </div>
+    <div class="loop-card">
+      <div class="step-num">2</div>
+      <h4>Where is it happening?</h4>
+      <p class="what">Narrow the camera. Which page? Which device? Which traffic source? Which audience segment? "Where" usually flips a vague stat into a useful one.</p>
+      <div class="ex"><span class="label">Example</span>"Most of the lift is coming from mobile users arriving via organic search."</div>
+    </div>
+    <div class="loop-card">
+      <div class="step-num">3</div>
+      <h4>Why might it be happening?</h4>
+      <p class="what">Now you can guess. GA4 will rarely tell you "why" outright — your job is to combine data with what you know about the redesign, the campaign, the season.</p>
+      <div class="ex"><span class="label">Example</span>"The new page added context above the form. Mobile users were the ones bouncing before. Makes sense the lift shows up there."</div>
+    </div>
+    <div class="loop-card">
+      <div class="step-num">4</div>
+      <h4>What move should we make next?</h4>
+      <p class="what">This is where analytics becomes useful. Translate the insight into one decision — a test, a content tweak, a stakeholder conversation.</p>
+      <div class="ex"><span class="label">Example</span>"Apply the same context-rich pattern to the volunteer signup form, where mobile bounce is also high."</div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE: ORDER THE LOOP -->
+  <div class="interact">
+    <p class="interact-eyebrow">Try it · interactive</p>
+    <h3>Put the loop in order</h3>
+    <p class="intro">Click the steps in the right order. Get it right and you've internalized the analytics workflow.</p>
+    <div class="match-list" id="order-list" style="max-width: 640px;"></div>
+    <div class="match-status" id="order-status" style="margin-top: 16px;">Click the steps from first to last.</div>
+  </div>
+</section>
+
+<!-- ========================================== -->
+<!-- LEVEL 3 — FIELD GUIDE                       -->
+<!-- ========================================== -->
+<section class="lvl" id="level-3">
+  <p class="lvl-eyebrow yellow"><span class="num">3</span> The Field Guide</p>
+  <h2 class="lvl-title">Six reports that answer 90% of redesign questions.</h2>
+  <p class="lvl-sub">Tap any row to see the exact click path and the story that report tells.</p>
+
+  <div class="guide">
+
+    <div class="guide-row">
+      <button class="guide-toggle" aria-expanded="false">
+        <span class="guide-letter">A</span>
+        <span class="guide-q">"Which pages are people viewing?" <span class="arrow-to">→</span> Pages and screens</span>
+        <span class="guide-chev">▶</span>
+      </button>
+      <div class="guide-body">
+        <ol class="clicktrail">
+          <li>Click <span class="kbd">Reports</span> in the left nav</li>
+          <li>Open <span class="kbd">Engagement → Pages and screens</span></li>
+          <li>Set the date range (top right)</li>
+          <li>Sort by <em>Views</em> or <em>Average engagement time</em></li>
+        </ol>
+        <div class="story-out">
+          <span class="lbl">Story this tells</span>
+          <p>A page with high views but low engagement time is a "headline that overpromised." A page with fewer views but high engagement is a hidden gem worth promoting.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="guide-row">
+      <button class="guide-toggle" aria-expanded="false">
+        <span class="guide-letter">B</span>
+        <span class="guide-q">"Where are visitors coming from?" <span class="arrow-to">→</span> Traffic acquisition</span>
+        <span class="guide-chev">▶</span>
+      </button>
+      <div class="guide-body">
+        <ol class="clicktrail">
+          <li>Click <span class="kbd">Reports → Acquisition → Traffic acquisition</span></li>
+          <li>Default grouping is "Session default channel group"</li>
+          <li>Click the pencil icon to add <em>Engaged sessions</em> and <em>Conversions</em> columns</li>
+          <li>Sort by Engaged sessions to find the most-effective doors</li>
+        </ol>
+        <div class="story-out">
+          <span class="lbl">Story this tells</span>
+          <p>Email and direct traffic almost always engage more than social. If a redesigned page is getting most of its traffic from social, expect surface-level skimming — design accordingly.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="guide-row">
+      <button class="guide-toggle" aria-expanded="false">
+        <span class="guide-letter">C</span>
+        <span class="guide-q">"Did people complete the thing we wanted?" <span class="arrow-to">→</span> Conversions / Key events</span>
+        <span class="guide-chev">▶</span>
+      </button>
+      <div class="guide-body">
+        <ol class="clicktrail">
+          <li>Click <span class="kbd">Reports → Engagement → Conversions</span> (newer GA4: <em>Key events</em>)</li>
+          <li>Pick the conversion: <em>email_signup</em>, <em>give_click</em>, <em>connect_lead</em></li>
+          <li>Use the secondary dimension to break it down by <em>Page path</em> or <em>Source / medium</em></li>
+        </ol>
+        <div class="story-out">
+          <span class="lbl">Story this tells</span>
+          <p>A 5% lift in traffic that produces a 30% lift in conversions means the new traffic is higher-intent — that's a stronger result than the headline number suggests.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="guide-row">
+      <button class="guide-toggle" aria-expanded="false">
+        <span class="guide-letter">D</span>
+        <span class="guide-q">"Did the redesign actually change anything?" <span class="arrow-to">→</span> The Compare habit</span>
+        <span class="guide-chev">▶</span>
+      </button>
+      <div class="guide-body">
+        <ol class="clicktrail">
+          <li>Open any report (Pages, Traffic, etc.)</li>
+          <li>Click the date range in the top-right corner</li>
+          <li>Toggle <span class="kbd">Compare</span> on</li>
+          <li>Pick "Same period last year" — it accounts for seasonality</li>
+        </ol>
+        <div class="story-out">
+          <span class="lbl">Story this tells</span>
+          <p>The single most important habit on this list. Numbers in isolation are nearly meaningless. Always answer "compared to what?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="guide-row">
+      <button class="guide-toggle" aria-expanded="false">
+        <span class="guide-letter">E</span>
+        <span class="guide-q">"Where are people getting stuck?" <span class="arrow-to">→</span> Engagement signals</span>
+        <span class="guide-chev">▶</span>
+      </button>
+      <div class="guide-body">
+        <ol class="clicktrail">
+          <li>Go to <span class="kbd">Reports → Engagement → Pages and screens</span></li>
+          <li>Look at <em>Average engagement time</em> and <em>Engagement rate</em></li>
+          <li>Sort ascending to find the worst-performing pages</li>
+          <li>For exits: build a Funnel Exploration in <span class="kbd">Explore</span> (advanced)</li>
+        </ol>
+        <div class="story-out">
+          <span class="lbl">Story this tells</span>
+          <p>"Bounce rate" returned in GA4 as the inverse of engagement rate. A high engagement rate (above ~55%) generally means the page is doing its job.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="guide-row">
+      <button class="guide-toggle" aria-expanded="false">
+        <span class="guide-letter">F</span>
+        <span class="guide-q">"Who exactly are these visitors?" <span class="arrow-to">→</span> Demographics & tech</span>
+        <span class="guide-chev">▶</span>
+      </button>
+      <div class="guide-body">
+        <ol class="clicktrail">
+          <li>Click <span class="kbd">Reports → User → User attributes → Demographics overview</span></li>
+          <li>Then check <span class="kbd">Reports → Tech → Tech overview</span> for device & browser</li>
+          <li>Use these as a sanity check, not a strategy by themselves</li>
+        </ol>
+        <div class="story-out">
+          <span class="lbl">Story this tells</span>
+          <p>If the audience pages skew heavily mobile, then mobile-first design isn't optional — it's the whole game.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========================================== -->
+<!-- LEVEL 4 — STORY MODE                        -->
+<!-- ========================================== -->
+<section class="lvl" id="level-4">
+  <p class="lvl-eyebrow coral"><span class="num">4</span> Story Mode</p>
+  <h2 class="lvl-title">Each redesign initiative, translated into a story about real people.</h2>
+  <p class="lvl-sub">Nine areas of the Cru.org redesign — and what their numbers are actually telling you about visitor behavior.</p>
+
+  <div class="stories">
+    <div class="story-card">
+      <span class="chip chip-win">Clear win</span>
+      <h4>Homepage</h4>
+      <p class="headline">Engagement edged up. Pathway traffic +20%.</p>
+      <p class="behavior">Visitors aren't loitering on the homepage — they're using it as a doorway and walking through. That's exactly what a homepage is supposed to do.</p>
+      <p class="move"><strong>Move:</strong> Stop measuring homepage success by time-on-page. Measure it by downstream click-through into Learn / Connect / Go.</p>
+    </div>
+    <div class="story-card">
+      <span class="chip chip-win">Clear win</span>
+      <h4>Navigation & Give</h4>
+      <p class="headline">Give CTA engagement doubled.</p>
+      <p class="behavior">When you make the door visible and put a few hand-picked invitations next to it, more people walk through. The path got clearer, not the urge stronger.</p>
+      <p class="move"><strong>Move:</strong> Treat the featured promo slots as scarce, valuable real estate. Rotate deliberately and measure each one.</p>
+    </div>
+    <div class="story-card">
+      <span class="chip chip-win">Clear win</span>
+      <h4>Email Subscriptions</h4>
+      <p class="headline">+29% conversion · −57% bounce.</p>
+      <p class="behavior">The old page was asking for an email before earning trust. The new page explains the offer, then asks. That sequence change is doing all the work.</p>
+      <p class="move"><strong>Move:</strong> Audit every "ask" page on the site for the same pattern: context first, request second.</p>
+    </div>
+    <div class="story-card">
+      <span class="chip chip-win">Clear win</span>
+      <h4>Connect Tool</h4>
+      <p class="headline">2,200+ users. Real leads flowing.</p>
+      <p class="behavior">A specific, location-aware tool beats a generic "Contact Us." When the site can answer "is there something for me, near me?" — people use it.</p>
+      <p class="move"><strong>Move:</strong> Look for other places where a generic page could become a "for you, near you" tool.</p>
+    </div>
+    <div class="story-card">
+      <span class="chip chip-win">Clear win</span>
+      <h4>Audience Pages</h4>
+      <p class="headline">34K+ visits across 6 audiences.</p>
+      <p class="behavior">People self-select into identities (athlete, parent, professional). When the site offers a page that reflects them, they engage. Search alone can't do this.</p>
+      <p class="move"><strong>Move:</strong> Watch which audience pages overperform and build deeper journeys for those audiences first.</p>
+    </div>
+    <div class="story-card">
+      <span class="chip chip-mixed">Mixed signal</span>
+      <h4>Learn Section</h4>
+      <p class="headline">Active users +12.8% · Pageviews −8.2% YoY.</p>
+      <p class="behavior">More humans, fewer pages each. Two reads: the new search/filter is helping people find what they want faster (good), or related content is harder to discover (worth investigating).</p>
+      <p class="move"><strong>Move:</strong> Pull engagement time per session. If session length is steady, the redesign is winning. If down, surface related content more.</p>
+    </div>
+    <div class="story-card">
+      <span class="chip chip-mixed">Mixed signal</span>
+      <h4>Go Section</h4>
+      <p class="headline">Mission −10–15% · Internships +19.5%.</p>
+      <p class="behavior">A reshuffle, not a loss. Visitors are sorting themselves into more accurate buckets — short-term commitment vs. career path — instead of all funneling through "mission trips" by default.</p>
+      <p class="move"><strong>Move:</strong> Track downstream conversions (applications, info-session signups) before drawing conclusions.</p>
+    </div>
+    <div class="story-card">
+      <span class="chip chip-watch">Watch closely</span>
+      <h4>About Section</h4>
+      <p class="headline">Trust → action funnel still being captured.</p>
+      <p class="behavior">An About section is rarely a destination. It's a "I'm checking if this is a real, trustworthy organization" stop. Engagement here predicts trust further down the funnel.</p>
+      <p class="move"><strong>Move:</strong> Track whether visitors who land on About are more likely to give, subscribe, or connect afterward.</p>
+    </div>
+    <div class="story-card">
+      <span class="chip chip-win">Quiet win</span>
+      <h4>Video Pages</h4>
+      <p class="headline">22 videos · ~300 monthly visits avg.</p>
+      <p class="behavior">Steady, not spectacular — but compounding. Video adds dwell time and gives Google more reason to surface the page. The first and most-recent videos behave very differently in GA4.</p>
+      <p class="move"><strong>Move:</strong> Compare top-vs-bottom video performance. If the gap is huge, the difference is probably topic or thumbnail, not template.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================== -->
+<!-- LEVEL 5 — PRACTICE                          -->
+<!-- ========================================== -->
+<section class="lvl" id="level-5">
+  <p class="lvl-eyebrow teal"><span class="num">5</span> Practice — Unlock the Insight</p>
+  <h2 class="lvl-title">Seven small puzzles to train the muscle.</h2>
+  <p class="lvl-sub">Try answering each before revealing. The reasoning matters more than the exact answer — these scenarios show up in real Cru.org review meetings.</p>
+
+  <div class="quest" data-quest="1">
+    <div class="quest-head">
+      <div class="quest-num">1</div>
+      <div>
+        <h3 class="quest-title">The most popular page</h3>
+        <p class="quest-prompt">Pages and screens shows that <em>/us/en/how-to-know-god</em> has by far the highest views on Cru.org. What does that tell you about visitor intent — and why should the redesign team care?</p>
+      </div>
+    </div>
+    <div class="quest-actions"><button class="reveal-btn" onclick="reveal(1)">Reveal the insight</button></div>
+    <div class="quest-answer" id="answer-1">
+      <h5>Insight unlocked</h5>
+      <p>A huge chunk of Cru.org visitors are showing up with a single, urgent question — not browsing the brand. They're looking for an answer to a deeply personal question.</p>
+      <p class="why"><strong>Why it matters:</strong> The page's job isn't to "convert" in a marketing sense. Its job is to be clear, calming, and trustworthy in the first 5 seconds. Engagement time, scroll depth, and onward navigation are the metrics that actually count.</p>
+    </div>
+  </div>
+
+  <div class="quest" data-quest="2">
+    <div class="quest-head">
+      <div class="quest-num">2</div>
+      <div>
+        <h3 class="quest-title">The drop-off mystery</h3>
+        <p class="quest-prompt">A landing page shows 10,000 sessions, 8% engagement rate, and 3 conversions. What's the most likely problem, and what would you check next?</p>
+      </div>
+    </div>
+    <div class="quest-actions"><button class="reveal-btn" onclick="reveal(2)">Reveal the insight</button></div>
+    <div class="quest-answer" id="answer-2">
+      <h5>Insight unlocked</h5>
+      <p>The page is getting plenty of traffic but visitors are leaving almost immediately. That's a <em>mismatch</em> problem, not a content problem.</p>
+      <p class="why"><strong>Check next:</strong> (1) Traffic source — paid/social often deliver mismatched intent. (2) Headline above the fold — does it match what was promised? (3) Mobile vs. desktop split. Fix the mismatch, not the page.</p>
+    </div>
+  </div>
+
+  <div class="quest" data-quest="3">
+    <div class="quest-head">
+      <div class="quest-num">3</div>
+      <div>
+        <h3 class="quest-title">Two doors, two players</h3>
+        <p class="quest-prompt">Organic search brings 60% of homepage traffic; email brings 8%. But email visitors convert at 4× the rate. Which channel matters more, and what should you do about it?</p>
+      </div>
+    </div>
+    <div class="quest-actions"><button class="reveal-btn" onclick="reveal(3)">Reveal the insight</button></div>
+    <div class="quest-answer" id="answer-3">
+      <h5>Insight unlocked</h5>
+      <p>Both matter, for different reasons. Organic = reach. Email = depth. They aren't competing — they're a relay race.</p>
+      <p class="why"><strong>The move:</strong> Use organic-search content to <em>capture emails</em>. Then let email do the converting work. The story isn't "email beats search" — it's "search fills the funnel that email later closes."</p>
+    </div>
+  </div>
+
+  <div class="quest" data-quest="4">
+    <div class="quest-head">
+      <div class="quest-num">4</div>
+      <div>
+        <h3 class="quest-title">The misleading dip</h3>
+        <p class="quest-prompt">Mission trip page views dropped 10–15% after the Go section relaunch. A stakeholder calls this a failure. Is it? What additional data would you bring to the meeting?</p>
+      </div>
+    </div>
+    <div class="quest-actions"><button class="reveal-btn" onclick="reveal(4)">Reveal the insight</button></div>
+    <div class="quest-answer" id="answer-4">
+      <h5>Insight unlocked</h5>
+      <p>Not necessarily a failure. Internships and jobs both rose. Visitors who were on the wrong page before are now on the right page.</p>
+      <p class="why"><strong>Bring to the meeting:</strong> (1) Total Go-section traffic. (2) Conversion rate per page — applications, info-session signups. (3) Time-to-conversion. If overall outcomes are up, the dip is a sorting effect, not a loss.</p>
+    </div>
+  </div>
+
+  <div class="quest" data-quest="5">
+    <div class="quest-head">
+      <div class="quest-num">5</div>
+      <div>
+        <h3 class="quest-title">Engagement vs. pageviews</h3>
+        <p class="quest-prompt">The Learn section saw +12.8% active users but −8.2% pageviews YoY. Same site. What story explains both?</p>
+      </div>
+    </div>
+    <div class="quest-actions"><button class="reveal-btn" onclick="reveal(5)">Reveal the insight</button></div>
+    <div class="quest-answer" id="answer-5">
+      <h5>Insight unlocked</h5>
+      <p>More people are showing up, but each person is viewing fewer pages. Most likely: the new search and filter UI is helping people find what they want <em>faster</em>.</p>
+      <p class="why"><strong>How to confirm:</strong> Check average engagement time per session. If it's holding steady or rising, the redesign is genuinely more efficient. If session time is also down, content discoverability slipped — surface "related articles" more aggressively.</p>
+    </div>
+  </div>
+
+  <div class="quest" data-quest="6">
+    <div class="quest-head">
+      <div class="quest-num">6</div>
+      <div>
+        <h3 class="quest-title">The "doubled CTA"</h3>
+        <p class="quest-prompt">Give CTA clicks doubled after the navigation redesign. A teammate says "donations should follow." What would you watch for, and what could go wrong with that prediction?</p>
+      </div>
+    </div>
+    <div class="quest-actions"><button class="reveal-btn" onclick="reveal(6)">Reveal the insight</button></div>
+    <div class="quest-answer" id="answer-6">
+      <h5>Insight unlocked</h5>
+      <p>A click on the CTA isn't a donation. It's intent. The two metrics can move in opposite directions if the giving page itself has friction.</p>
+      <p class="why"><strong>Watch:</strong> Click-to-donation conversion rate. If clicks doubled but donations rose only 30%, the giving page is now the bottleneck. The CTA worked; the next page didn't keep up.</p>
+    </div>
+  </div>
+
+  <div class="quest" data-quest="7">
+    <div class="quest-head">
+      <div class="quest-num">7</div>
+      <div>
+        <h3 class="quest-title">Audience pages, asymmetric</h3>
+        <p class="quest-prompt">Across the six audience pages, the Athletes page gets 5× the visits of the Pastors page. Does that mean the Pastors page is failing?</p>
+      </div>
+    </div>
+    <div class="quest-actions"><button class="reveal-btn" onclick="reveal(7)">Reveal the insight</button></div>
+    <div class="quest-answer" id="answer-7">
+      <h5>Insight unlocked</h5>
+      <p>No — and judging audience pages on raw traffic is the wrong scoreboard. A page reaching 200 highly relevant pastors a month is more valuable than one reaching 1,000 mildly curious athletes.</p>
+      <p class="why"><strong>Better metric:</strong> Engagement rate, conversion rate, and downstream actions per audience. Each audience page has its own ceiling — measure it against itself over time, not against the others.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================== -->
+<!-- EXPLORE GA4 — guided walkthrough            -->
+<!-- ========================================== -->
+<section class="lvl" id="explore">
+  <p class="lvl-eyebrow yellow"><span class="num">→</span> Explore GA4</p>
+  <h2 class="lvl-title">Open Google Analytics. I'll walk you through it.</h2>
+  <p class="lvl-sub">Click the button below — it opens GA4 with the Cru.org property in a new tab and launches a guided walkthrough right here. Six short slides, each with a video from me showing exactly what to click, plus optional screenshots.</p>
+
+  <div class="explore-launchpad">
+    <div class="explore-copy">
+      <p class="launch-eyebrow">Cru.org · Live property</p>
+      <h3>Ready when you are.</h3>
+      <p>The walkthrough is meant to run side-by-side with your own GA4 tab. Watch a slide, try the same click, then move to the next one. Take as long as you need.</p>
+    </div>
+    <button class="launch-cta" type="button" onclick="openExplore()">
+      Open Google Analytics (GA4) <span class="launch-arrow">→</span>
+    </button>
+  </div>
+
+  <p class="explore-note">Already opened it once? <button class="link-btn" type="button" onclick="openExplore(false)">Just relaunch the walkthrough →</button></p>
+</section>
+
+<!-- ========================================== -->
+<!-- KNOWLEDGE CHECK                              -->
+<!-- ========================================== -->
+<section class="check" id="check">
+  <div class="check-inner">
+    <p class="check-eyebrow">Final Round · Knowledge Check</p>
+    <h2>Earn your GA4 badge.</h2>
+    <p class="lede">Six questions, one shot at each. You'll get an instant explanation after each answer — and a tier at the end.</p>
+
+    <div id="quiz"></div>
+    <div class="result-panel" id="resultPanel">
+      <p class="result-eyebrow">Your result</p>
+      <div class="result-score"><span id="finalScore">0</span><span class="of"> / 6</span></div>
+      <p class="result-tier" id="finalTier">—</p>
+      <p class="result-msg" id="finalMsg">—</p>
+      <button class="reset-btn" onclick="resetQuiz()">Try again</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================== -->
+<!-- GLOSSARY                                     -->
+<!-- ========================================== -->
+<section class="glossary-section">
+  <div class="glossary-inner">
+    <h2>Pocket Glossary</h2>
+    <p class="sub">The fewest GA4 terms you can get away with. Skim once, refer back when reports look intimidating.</p>
+    <dl class="gloss-grid">
+      <div class="gloss-term"><dt>Active Users</dt><dd>People who actually engaged in the time period (not just loaded a page and left).</dd></div>
+      <div class="gloss-term"><dt>Engagement Rate</dt><dd>% of sessions that lasted 10+ seconds, had a conversion, or 2+ pageviews.</dd></div>
+      <div class="gloss-term"><dt>Engaged Sessions</dt><dd>The actual count behind engagement rate. Use when comparing channels.</dd></div>
+      <div class="gloss-term"><dt>Avg. Engagement Time</dt><dd>How long a typical visitor was actively focused on the site.</dd></div>
+      <div class="gloss-term"><dt>Key Event / Conversion</dt><dd>An event you've flagged as important. You decide which events count.</dd></div>
+      <div class="gloss-term"><dt>Source / Medium</dt><dd>Where + how. e.g. <em>google / organic</em>, <em>newsletter / email</em>.</dd></div>
+      <div class="gloss-term"><dt>Channel Group</dt><dd>Bucket of similar source/mediums: Organic, Direct, Email, Social, Paid.</dd></div>
+      <div class="gloss-term"><dt>Page Path</dt><dd>The URL after the domain — <em>/us/en/learn</em>. Filter reports to a section.</dd></div>
+      <div class="gloss-term"><dt>Landing Page</dt><dd>The first page someone saw in their session. The "front door" for that visit.</dd></div>
+      <div class="gloss-term"><dt>Exploration</dt><dd>GA4's advanced playground. Funnels, paths, free-form analyses. Graduate to it.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ========================================== -->
+<!-- FOOTER                                       -->
+<!-- ========================================== -->
+<footer>
+  <div class="foot-mark">
+    <span class="foot-logo-wrap">
+      <img class="foot-logo" src="cru-logo-2025.png" alt="cru">
+    </span>
+  </div>
+  <h3>The GA4 Game</h3>
+  <p>Cru Web Strategy · Internal training</p>
+  <div class="hairline"></div>
+  <p>Curiosity over precision. Stories over numbers. Decisions over dashboards.</p>
+</footer>
+
+<!-- ========================================== -->
+<!-- WALKTHROUGH MODAL                            -->
+<!-- ========================================== -->
+<div class="modal-backdrop" id="exploreModal" role="dialog" aria-modal="true" aria-labelledby="slideTitle" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div>
+        <p class="modal-step">Slide <span id="slideCounter">1</span> of <span id="slideTotal">11</span></p>
+        <h2 class="modal-title" id="slideTitle">—</h2>
+      </div>
+      <button class="modal-close" type="button" onclick="closeExplore()" aria-label="Close walkthrough">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="nav-btn prev" type="button" id="prevBtn" onclick="prevSlide()">← Prev</button>
+      <div class="dots" id="dots"></div>
+      <button class="nav-btn next" type="button" id="nextBtn" onclick="nextSlide()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================
+   EXPANDABLE FIELD GUIDE
+============================================ */
+document.querySelectorAll('.guide-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!isOpen));
+  });
+});
+
+/* ============================================
+   PROGRESS TRACKER (LVL 5 puzzles)
+============================================ */
+const solved = new Set();
+const TOTAL = 7;
+function reveal(n) {
+  const ans = document.getElementById('answer-' + n);
+  const card = document.querySelector('.quest[data-quest="' + n + '"]');
+  const btn = card.querySelector('.reveal-btn');
+  if (!ans.classList.contains('open')) {
+    ans.classList.add('open');
+    card.classList.add('solved');
+    btn.classList.add('solved-btn');
+    btn.textContent = 'Insight unlocked ✓';
+    solved.add(n);
+  } else {
+    ans.classList.remove('open');
+    card.classList.remove('solved');
+    btn.classList.remove('solved-btn');
+    btn.textContent = 'Reveal the insight';
+    solved.delete(n);
+  }
+  updateProgress();
+}
+function updateProgress() {
+  const fill = document.getElementById('progressFill');
+  const score = document.getElementById('progressScore');
+  const pct = (solved.size / TOTAL) * 100;
+  fill.style.width = pct + '%';
+  score.textContent = solved.size + ' / ' + TOTAL;
+}
+
+/* ============================================
+   LVL 1 INTERACTIVE: TERM MATCHER
+============================================ */
+const matchPairs = {
+  users: 'Players',
+  sessions: 'Visits',
+  events: 'Moves',
+  conversions: 'Winning moves',
+  traffic: 'Entry paths',
+};
+let selectedLeft = null;
+const matchedKeys = new Set();
+const matchStatus = document.getElementById('match-status');
+
+function setupMatcher() {
+  document.querySelectorAll('#match-left .match-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (matchedKeys.has(btn.dataset.key)) return;
+      document.querySelectorAll('#match-left .match-item').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedLeft = btn;
+      matchStatus.textContent = `You picked "${btn.textContent}". Now click its match on the right.`;
+    });
+  });
+  document.querySelectorAll('#match-right .match-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (matchedKeys.has(btn.dataset.key)) return;
+      if (!selectedLeft) {
+        matchStatus.textContent = 'Pick a GA4 term on the left first.';
+        return;
+      }
+      if (selectedLeft.dataset.key === btn.dataset.key) {
+        // correct
+        selectedLeft.classList.remove('selected');
+        selectedLeft.classList.add('matched-correct');
+        btn.classList.add('matched-correct');
+        matchedKeys.add(btn.dataset.key);
+        matchStatus.textContent = `Match! ${selectedLeft.textContent} = ${matchPairs[btn.dataset.key]}.`;
+        selectedLeft = null;
+        if (matchedKeys.size === 5) {
+          matchStatus.textContent = 'All five matched. You officially speak GA4.';
+          matchStatus.classList.add('win');
+        }
+      } else {
+        btn.classList.add('shake');
+        setTimeout(() => btn.classList.remove('shake'), 350);
+        matchStatus.textContent = 'Not quite — try again. (No penalty.)';
+      }
+    });
+  });
+}
+setupMatcher();
+
+/* ============================================
+   LVL 2 INTERACTIVE: ORDER THE LOOP
+============================================ */
+const correctOrder = ['What is happening?', 'Where is it happening?', 'Why might it be happening?', 'What move next?'];
+let shuffled = [...correctOrder].sort(() => Math.random() - 0.5);
+let userOrder = [];
+
+function renderOrderList() {
+  const list = document.getElementById('order-list');
+  list.innerHTML = '';
+  shuffled.forEach(step => {
+    if (userOrder.includes(step)) return;
+    const btn = document.createElement('button');
+    btn.className = 'match-item';
+    btn.textContent = step;
+    btn.onclick = () => {
+      userOrder.push(step);
+      checkOrder();
+      renderOrderList();
+    };
+    list.appendChild(btn);
+  });
+  // show selected
+  userOrder.forEach((step, i) => {
+    const div = document.createElement('div');
+    div.className = 'match-item matched-correct';
+    div.textContent = `${i+1}. ${step}`;
+    div.style.cursor = 'default';
+    list.appendChild(div);
+  });
+}
+function checkOrder() {
+  const status = document.getElementById('order-status');
+  if (userOrder.length < 4) {
+    status.textContent = `Step ${userOrder.length} of 4 selected.`;
+    status.classList.remove('win');
+    return;
+  }
+  const correct = userOrder.every((s, i) => s === correctOrder[i]);
+  if (correct) {
+    status.textContent = 'Right order. This loop will be your default move forever.';
+    status.classList.add('win');
+  } else {
+    status.textContent = "Not quite. The right order is: What → Where → Why → What next. Resetting…";
+    status.classList.remove('win');
+    setTimeout(() => {
+      userOrder = [];
+      shuffled = [...correctOrder].sort(() => Math.random() - 0.5);
+      renderOrderList();
+      status.textContent = 'Click the steps from first to last.';
+    }, 1800);
+  }
+}
+renderOrderList();
+
+/* ============================================
+   FINAL QUIZ
+============================================ */
+const quizData = [
+  {
+    q: 'A landing page has lots of sessions but tiny engagement and almost no conversions. The most useful first hypothesis is:',
+    options: [
+      'The page content is poorly written.',
+      'The traffic source is delivering visitors with mismatched intent.',
+      'GA4 is undercounting the conversion event.',
+      'The page is loading too slowly.',
+    ],
+    correct: 1,
+    feedback: 'Right. High traffic + low engagement is almost always a "wrong audience" story before it\'s a "bad page" story. Check the traffic source and the headline match first.',
+  },
+  {
+    q: 'Mission trip page views dropped 12% after the Go section relaunch. Internships and jobs both went up. The most accurate read is:',
+    options: [
+      'The redesign hurt mission trip interest.',
+      'GA4 changed how it tracks pageviews.',
+      'Visitors are sorting themselves more accurately into the bucket they actually want.',
+      'The mission trip page needs more content.',
+    ],
+    correct: 2,
+    feedback: 'Yes. When a category gets clearer, traffic redistributes. The headline drop is a sorting effect, not a loss — confirm by checking total Go-section traffic and downstream conversions.',
+  },
+  {
+    q: 'You want to know whether the homepage redesign actually changed anything. The single most important habit:',
+    options: [
+      'Read the average engagement time.',
+      'Toggle the Compare option and pick "Same period last year."',
+      'Add a custom event for every button.',
+      'Filter by device type.',
+    ],
+    correct: 1,
+    feedback: 'Compare-to-last-year is the habit that turns numbers into useful answers. It accounts for seasonality and gives you a real "compared to what?"',
+  },
+  {
+    q: 'In GA4, a "Conversion" (or "Key event") is best described as:',
+    options: [
+      'Any pageview on a marked page.',
+      'A session that lasts more than 10 seconds.',
+      'An event you have decided counts as success — you choose which.',
+      'A user who visits more than once.',
+    ],
+    correct: 2,
+    feedback: 'Conversions are events you flag as important. Cru\'s might be email_signup, give_click, connect_lead. They\'re your call.',
+  },
+  {
+    q: 'Email traffic is only 8% of homepage visits, but converts at 4× the rate of organic search. The most useful conclusion is:',
+    options: [
+      'Stop investing in organic search.',
+      'Email is a better channel than search.',
+      'Organic search and email are doing different jobs — search fills the funnel that email later closes.',
+      'The email list is too small to matter.',
+    ],
+    correct: 2,
+    feedback: 'They\'re a relay, not a competition. Use organic content to capture emails; let email do the converting it\'s already good at.',
+  },
+  {
+    q: 'The Learn section sees +12.8% active users and −8.2% pageviews YoY. Most likely explanation:',
+    options: [
+      'The redesign is failing.',
+      'Users are finding what they want faster (fewer clicks needed).',
+      'Search engines are de-ranking Cru.org.',
+      'GA4 is sampling the data.',
+    ],
+    correct: 1,
+    feedback: 'Almost certainly users finding things faster — confirm by checking average engagement time per session. If it\'s steady or up, the redesign is winning.',
+  },
+];
+
+let quizState = quizData.map(() => ({ answered: false, choice: null }));
+
+function renderQuiz() {
+  const wrap = document.getElementById('quiz');
+  wrap.innerHTML = '';
+  quizData.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    card.innerHTML = `
+      <span class="quiz-q-num">Question ${qi+1} of ${quizData.length}</span>
+      <p class="quiz-q">${q.q}</p>
+      <div class="quiz-options">
+        ${q.options.map((opt, oi) => `<button class="quiz-opt" data-q="${qi}" data-o="${oi}">${opt}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="fb-${qi}"></div>
+    `;
+    wrap.appendChild(card);
+  });
+  wrap.querySelectorAll('.quiz-opt').forEach(btn => {
+    btn.addEventListener('click', () => answerQuiz(+btn.dataset.q, +btn.dataset.o));
+  });
+}
+function answerQuiz(qi, oi) {
+  if (quizState[qi].answered) return;
+  quizState[qi].answered = true;
+  quizState[qi].choice = oi;
+  const q = quizData[qi];
+  const opts = document.querySelectorAll(`.quiz-opt[data-q="${qi}"]`);
+  opts.forEach(btn => {
+    btn.classList.add('locked');
+    const optIdx = +btn.dataset.o;
+    if (optIdx === q.correct) btn.classList.add('correct');
+    else if (optIdx === oi) btn.classList.add('wrong');
+  });
+  const fb = document.getElementById('fb-' + qi);
+  const correct = oi === q.correct;
+  fb.innerHTML = `<strong>${correct ? 'Correct.' : 'Not quite.'}</strong> ${q.feedback}`;
+  fb.classList.add('show');
+
+  // if all answered, show result
+  if (quizState.every(s => s.answered)) {
+    setTimeout(showResult, 600);
+  }
+}
+function showResult() {
+  const correct = quizState.filter((s, i) => s.choice === quizData[i].correct).length;
+  document.getElementById('finalScore').textContent = correct;
+  let tier, msg;
+  if (correct === 6) { tier = 'GA4 Sherpa'; msg = 'Perfect score. You can lead the next analytics review meeting and translate the numbers for the whole team.'; }
+  else if (correct >= 4) { tier = 'GA4 Player'; msg = 'You have the loop down. Keep practicing the Compare habit and you\'ll be teaching others within a month.'; }
+  else if (correct >= 2) { tier = 'GA4 Apprentice'; msg = 'Good start. Re-skim Levels 2 and 3 — the Strategy Loop and the Field Guide are the parts that pay off fastest.'; }
+  else { tier = 'GA4 Curious'; msg = 'No shame in this score — the goal is curiosity, not certainty. Try the puzzles in Level 5 again, then re-take the quiz.'; }
+  document.getElementById('finalTier').textContent = tier;
+  document.getElementById('finalMsg').textContent = msg;
+  document.getElementById('resultPanel').classList.add('show');
+  document.getElementById('resultPanel').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function resetQuiz() {
+  quizState = quizData.map(() => ({ answered: false, choice: null }));
+  document.getElementById('resultPanel').classList.remove('show');
+  renderQuiz();
+  document.getElementById('check').scrollIntoView({ behavior: 'smooth' });
+}
+renderQuiz();
+
+/* ============================================
+   EXPLORE GA4 — GUIDED WALKTHROUGH MODAL
+============================================ */
+const GA4_URL = 'https://analytics.google.com/analytics/web/?authuser=0#/a181145622p306441219/reports/intelligenthome';
+
+// Each slide auto-loads:
+//   media/{slug}.mp4         — primary walkthrough video (also tries .webm, .mov)
+//   media/{slug}-1.png       — supplementary screenshot 1 (also .jpg, .jpeg, .webp)
+//   media/{slug}-2.png       — supplementary screenshot 2
+//   media/{slug}-3.png       — supplementary screenshot 3
+// Drop the files in the media/ folder with these exact names and they appear automatically.
+const exploreSlides = [
+  {
+    slug: 'ga4_game_intro',
+    title: 'Welcome to the GA4 Game',
+    intro: 'This first video is a quick tour of the training site you\'re using right now. I walk you through how the walkthrough works, what each slide will cover, and how to jump back and forth at your own pace. Watch this one first and the rest will feel intuitive.',
+    points: [
+      'How this training site is structured',
+      'Navigating between slides — Prev/Next, arrow keys, the dots',
+      'Opening GA4 alongside the walkthrough',
+      'Skipping ahead, replaying, taking it at your own pace'
+    ]
+  },
+  {
+    slug: 'jamiefonseca_whoisshe_whyga4_internship',
+    title: 'Hi, I\'m Jamie',
+    intro: 'Now that you\'ve seen how the walkthrough works, a quick hello. I\'m Jamie Fonseca — interning on the Cru web strategy team — and this is the GA4 training I wish I\'d had on day one. I cover who I am, why analytics matters for Cru, and what we\'ll learn together over the next four videos.',
+    points: [
+      'Who I am and what I do at Cru',
+      'Why GA4 matters for the web team and Cru\'s mission',
+      'The internship project behind this walkthrough',
+      'What you\'ll learn across the next four videos'
+    ]
+  },
+  {
+    slug: 'login_ga4',
+    title: 'Logging Into GA4',
+    intro: 'Now the practical part. In this video I walk you through actually getting into GA4 — signing in with your Cru Google account, finding the Cru.org property, and what to do if you don\'t have access yet. Once you\'re in, the rest of this walkthrough makes sense.',
+    points: [
+      'Where to go: analytics.google.com',
+      'Signing in with your Cru Google account',
+      'Finding and selecting the Cru.org property in the dropdown',
+      'What to do if you don\'t have access yet'
+    ]
+  },
+  {
+    slug: 'ga4_homepage_overview',
+    title: 'The GA4 Homepage',
+    intro: 'Once you\'re logged in, you land on Home — and this is what I\'ll walk you through. I show you the four most important things on this screen: who\'s on the site right now, the trends graph, the suggested cards, and how to jump into Realtime. After this video you\'ll know exactly what you\'re looking at when you first open GA4.',
+    points: [
+      'Active users (last 30 min) — your live pulse',
+      'The Reports snapshot graph and what its lines mean',
+      'Suggested cards — what Google is highlighting for you',
+      'How to jump into the Realtime tab from here'
+    ]
+  },
+  {
+    slug: 'ga4_reports_acquisition',
+    title: 'Acquisition — Where They Came From',
+    intro: 'This video covers the first big report you\'ll actually use: Acquisition. I walk you through how to find it, what it shows, and how to read it. The big idea: every visitor came through one of a few different doors (search, email, social, direct, paid) — and Acquisition tells you which doors are bringing the right people.',
+    points: [
+      'Where to find it: Reports → Acquisition → Traffic acquisition',
+      'The channel groups: Organic, Direct, Email, Social, Referral, Paid',
+      'Why engagement quality matters more than raw traffic volume',
+      'How to spot which channels bring the most engaged visitors'
+    ]
+  },
+  {
+    slug: 'ga4_reports_engagement',
+    title: 'Engagement — What They Did',
+    intro: 'The companion to Acquisition. Where Acquisition tells you where people came from, Engagement tells you what they actually did once they got to Cru.org. In this video I walk you through the Pages and screens report — how to find it, how to sort it, and how to spot the site\'s hidden gems and its underperformers.',
+    points: [
+      'Where to find it: Reports → Engagement → Pages and screens',
+      'How to sort: by Views vs. Average engagement time',
+      '"High views + low engagement time" = the page didn\'t deliver',
+      '"Low views + high engagement" = hidden gem worth promoting'
+    ]
+  }
+];
+
+// File extensions tried in order — first to load wins
+const VIDEO_EXTS = ['mp4', 'webm', 'mov'];
+const IMAGE_EXTS = ['png', 'jpg', 'jpeg', 'webp'];
+const SHOT_INDEXES = [1, 2, 3]; // up to 3 supplementary screenshots per slide
+
+// Build the filename reference table on the launchpad
+(function populateBuildTable() {
+  const tbody = document.getElementById('build-table-body');
+  if (!tbody) return;
+  tbody.innerHTML = exploreSlides.map((s, i) => `
+    <tr>
+      <td>${i + 1}. ${s.title}</td>
+      <td><code>media/${s.slug}.mp4</code></td>
+      <td><code>media/${s.slug}-1.png</code> &nbsp;<code>media/${s.slug}-2.png</code> &nbsp;<code>media/${s.slug}-3.png</code></td>
+    </tr>
+  `).join('');
+})();
+
+let currentSlide = 0;
+const modal = document.getElementById('exploreModal');
+
+function openExplore(openTab) {
+  if (openTab !== false) {
+    window.open(GA4_URL, '_blank', 'noopener');
+  }
+  currentSlide = 0;
+  renderSlide();
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+function closeExplore() {
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+function nextSlide() {
+  if (currentSlide < exploreSlides.length - 1) {
+    currentSlide++;
+    renderSlide();
+  }
+}
+function prevSlide() {
+  if (currentSlide > 0) {
+    currentSlide--;
+    renderSlide();
+  }
+}
+function goToSlide(i) {
+  currentSlide = i;
+  renderSlide();
+}
+function renderSlide() {
+  const s = exploreSlides[currentSlide];
+  document.getElementById('slideCounter').textContent = currentSlide + 1;
+  document.getElementById('slideTotal').textContent = exploreSlides.length;
+  document.getElementById('slideTitle').textContent = s.title;
+
+  const body = document.getElementById('modalBody');
+  const shotThumbsHtml = SHOT_INDEXES.map(n => `
+    <div class="shot-thumb" data-loaded="false" id="shot-${s.slug}-${n}">
+      <img alt="${s.title} screenshot ${n}" data-slug="${s.slug}" data-shot="${n}" data-ext-index="0" onclick="openLightbox(this.src)">
+    </div>
+  `).join('');
+
+  body.innerHTML = `
+    <div class="slide-stack">
+      <div class="slide-video-wrap" data-has-video="false" id="vid-wrap-${s.slug}">
+        <video class="slide-video-el" data-loaded="false" controls preload="metadata" playsinline data-slug="${s.slug}" data-ext-index="0"></video>
+        <div class="slide-video-placeholder">
+          <div>
+            <div class="play-icon">▶</div>
+            <p class="ph-label">Walkthrough video</p>
+            <p class="ph-text">Save your recording as <code>media/${s.slug}.mp4</code> and it'll play here automatically.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-text">
+        <p>${s.intro}</p>
+        <h3>What to notice</h3>
+        <ul class="slide-points">
+          ${s.points.map(p => `<li>${p}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="slide-screenshots" data-has-shots="false" id="shots-${s.slug}">
+        <p class="shot-label">Screenshots — click to enlarge</p>
+        ${shotThumbsHtml}
+      </div>
+    </div>
+  `;
+  body.scrollTop = 0;
+
+  // ===== Load primary video (with extension fallback) =====
+  const vidEl = body.querySelector('.slide-video-el');
+  vidEl.onloadedmetadata = () => {
+    vidEl.setAttribute('data-loaded', 'true');
+    document.getElementById('vid-wrap-' + s.slug).setAttribute('data-has-video', 'true');
+  };
+  vidEl.onerror = () => {
+    const idx = parseInt(vidEl.getAttribute('data-ext-index'), 10) + 1;
+    if (idx < VIDEO_EXTS.length) {
+      vidEl.setAttribute('data-ext-index', idx);
+      vidEl.src = `media/${s.slug}.${VIDEO_EXTS[idx]}`;
+    }
+  };
+  vidEl.src = `media/${s.slug}.${VIDEO_EXTS[0]}`;
+
+  // ===== Load supplementary screenshots (1, 2, 3) with extension fallback =====
+  body.querySelectorAll('.shot-thumb img').forEach(img => {
+    const slug = img.dataset.slug;
+    const n = img.dataset.shot;
+    img.onload = () => {
+      img.parentElement.setAttribute('data-loaded', 'true');
+      // mark the strip as visible if any thumb succeeded
+      document.getElementById('shots-' + slug).setAttribute('data-has-shots', 'true');
+    };
+    img.onerror = () => {
+      const idx = parseInt(img.dataset.extIndex, 10) + 1;
+      if (idx < IMAGE_EXTS.length) {
+        img.dataset.extIndex = idx;
+        img.src = `media/${slug}-${n}.${IMAGE_EXTS[idx]}`;
+      }
+      // else: thumb stays hidden
+    };
+    img.src = `media/${slug}-${n}.${IMAGE_EXTS[0]}`;
+  });
+
+  // ===== Dots & nav buttons =====
+  const dotsEl = document.getElementById('dots');
+  dotsEl.innerHTML = exploreSlides.map((_, i) =>
+    `<button class="dot ${i === currentSlide ? 'active' : ''}" type="button" aria-label="Go to slide ${i + 1}" onclick="goToSlide(${i})"></button>`
+  ).join('');
+
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.disabled = currentSlide === exploreSlides.length - 1;
+  nextBtn.textContent = currentSlide === exploreSlides.length - 1 ? 'Done' : 'Next →';
+}
+
+// ===== Lightbox for screenshot thumbnails =====
+function openLightbox(src) {
+  let lb = document.getElementById('lightbox');
+  if (!lb) {
+    lb = document.createElement('div');
+    lb.id = 'lightbox';
+    lb.className = 'lightbox';
+    lb.innerHTML = '<img>';
+    lb.addEventListener('click', () => lb.classList.remove('open'));
+    document.body.appendChild(lb);
+  }
+  lb.querySelector('img').src = src;
+  lb.classList.add('open');
+}
+
+// Keyboard nav
+document.addEventListener('keydown', (e) => {
+  if (!modal.classList.contains('open')) return;
+  if (e.key === 'ArrowRight') nextSlide();
+  else if (e.key === 'ArrowLeft') prevSlide();
+  else if (e.key === 'Escape') closeExplore();
+});
+
+// Click backdrop to close (but not the card itself)
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) closeExplore();
+});
+</script>
+</body>
+</html>
